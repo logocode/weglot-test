@@ -1,35 +1,36 @@
-import Head from 'next/head'
-import { GetStaticProps, NextPage } from 'next'
-import Post from '../components/post'
-import { PostData, PostDataListProps } from '../types/postdata'
-import { GetPosts } from '../lib/postdata_api'
+import { NextPage } from 'next'
+import Link from 'next/link'
 
-export const getStaticProps: GetStaticProps = async (_context) => {
-  // fetch list of posts
-  const posts: PostData[] = await GetPosts()
-  return {
-    props: {
-      postDataList: posts,
-    },
-  }
-}
-
-const IndexPage: NextPage<PostDataListProps> = ({
-  postDataList,
-}: PostDataListProps) => {
+const IndexPage: NextPage<{}> = () => {
   return (
     <main>
-      <Head>
-        <title>Home page</title>
-      </Head>
+      <h1>Problem description</h1>
+      <p>
+        This is a demo of a problem with NextJS and WeGlot. The repro is as
+        follows:
+      </p>
 
-      <h1>List of posts</h1>
+      <ol>
+        <li>Load the home page</li>
+        <li>Switch the language to "French" in the bottom corner.</li>
+        <li>Hard reload the page.</li>
+        <li>
+          Take note that the content is shown immediately in French. This is
+          working as expected.
+        </li>
+        <li>Next, click the "More content" link.</li>
+        <li>
+          Take note that the content briefly shows in english before it is
+          translated fully. This is not working as expected.
+        </li>
+      </ol>
 
-      <section>
-        {postDataList.map((post: PostData) => (
-          <Post {...post} key={post.id} />
-        ))}
-      </section>
+      <p>
+        TLDR: First page load works, navigation flashes source language prior to
+        showing translated language.
+      </p>
+
+      <Link href={'/more-content'}>Check out the other content.</Link>
     </main>
   )
 }
